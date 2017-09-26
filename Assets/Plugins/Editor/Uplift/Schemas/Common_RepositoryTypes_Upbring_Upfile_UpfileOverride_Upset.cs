@@ -48,6 +48,8 @@ namespace Uplift.Schemas {
         
         private InstalledPackage[] installedPackageField;
         
+        private string fileVersionField;
+        
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("InstalledPackage")]
         public InstalledPackage[] InstalledPackage {
@@ -56,6 +58,17 @@ namespace Uplift.Schemas {
             }
             set {
                 this.installedPackageField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute(DataType="integer")]
+        public string FileVersion {
+            get {
+                return this.fileVersionField;
+            }
+            set {
+                this.fileVersionField = value;
             }
         }
     }
@@ -664,6 +677,8 @@ namespace Uplift.Schemas {
         
         private DependencyDefinition[] dependenciesField;
         
+        private string fileVersionField;
+        
         /// <remarks/>
         public string UnityVersion {
             get {
@@ -707,6 +722,17 @@ namespace Uplift.Schemas {
                 this.dependenciesField = value;
             }
         }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute(DataType="integer")]
+        public string FileVersion {
+            get {
+                return this.fileVersionField;
+            }
+            set {
+                this.fileVersionField = value;
+            }
+        }
     }
     
     /// <remarks/>
@@ -719,6 +745,8 @@ namespace Uplift.Schemas {
         
         private Repository[] repositoriesField;
         
+        private string fileVersionField;
+        
         /// <remarks/>
         [System.Xml.Serialization.XmlArrayItemAttribute(typeof(FileRepository), IsNullable=false)]
         [System.Xml.Serialization.XmlArrayItemAttribute(typeof(GitRepository), IsNullable=false)]
@@ -729,6 +757,17 @@ namespace Uplift.Schemas {
             }
             set {
                 this.repositoriesField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute(DataType="integer")]
+        public string FileVersion {
+            get {
+                return this.fileVersionField;
+            }
+            set {
+                this.fileVersionField = value;
             }
         }
     }
@@ -752,6 +791,8 @@ namespace Uplift.Schemas {
         private DependencyDefinition[] dependenciesField;
         
         private InstallSpecPath[] configurationField;
+        
+        private string fileVersionField;
         
         /// <remarks/>
         public string UnityVersion {
@@ -812,6 +853,17 @@ namespace Uplift.Schemas {
             }
             set {
                 this.configurationField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute(DataType="integer")]
+        public string FileVersion {
+            get {
+                return this.fileVersionField;
+            }
+            set {
+                this.fileVersionField = value;
             }
         }
     }

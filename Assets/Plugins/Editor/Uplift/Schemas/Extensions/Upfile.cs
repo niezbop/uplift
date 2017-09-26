@@ -31,6 +31,7 @@ using System.Xml.Serialization;
 using UnityEngine;
 using Uplift.Common;
 using Uplift.Packages;
+using Uplift.Schemas.Migration;
 
 namespace Uplift.Schemas
 {
@@ -72,6 +73,7 @@ namespace Uplift.Schemas
         }
 
         // --- CLASS DECLARATION ---
+        public static readonly int fileVersion = 1;
         public static readonly string upfilePath = "Upfile.xml";
         public static readonly string globalOverridePath = ".Upfile.xml";
 
@@ -87,8 +89,14 @@ namespace Uplift.Schemas
 
         internal static Upfile LoadXml(string path)
         {
+            Migrator<Upfile> migrator = new Migrator<Upfile>();
             try
             {
+                if (migrator.NeedMigration(path))
+                {
+                    migrator.MigrateToLatest(path);
+                }
+
                 StrictXmlDeserializer<Upfile> deserializer = new StrictXmlDeserializer<Upfile>();
 
                 using (FileStream fs = new FileStream(path, FileMode.Open))

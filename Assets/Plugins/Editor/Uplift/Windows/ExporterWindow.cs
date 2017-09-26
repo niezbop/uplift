@@ -1,4 +1,4 @@
-// --- BEGIN LICENSE BLOCK ---
+﻿// --- BEGIN LICENSE BLOCK ---
 /*
  * Copyright (c) 2017-present WeWantToKnow AS
  *

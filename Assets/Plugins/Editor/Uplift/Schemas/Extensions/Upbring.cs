@@ -29,6 +29,7 @@ using System.Collections.Generic;
 using System.Xml.Serialization;
 using Uplift.Packages;
 using Uplift.Common;
+using Uplift.Schemas.Migration;
 
 namespace Uplift.Schemas
 {
@@ -61,6 +62,7 @@ namespace Uplift.Schemas
         }
 
         // --- CLASS DECLARATION ---
+        public static readonly int fileVersion = 1;
         protected static readonly string upbringFileName = "Upbring.xml";
         protected static string UpbringPath
         {
@@ -96,13 +98,23 @@ namespace Uplift.Schemas
 
         internal static Upbring LoadXml()
         {
+            Migrator<Upbring> migrator = new Migrator<Upbring>();
             try
             {
                 if (!File.Exists(UpbringPath))
                 {
-                    Upbring newUpbring = new Upbring { InstalledPackage = new InstalledPackage[0] };
+                    Upbring newUpbring = new Upbring {
+                        InstalledPackage = new InstalledPackage[0],
+                        FileVersion = fileVersion.ToString()
+                    };
                     return newUpbring;
                 }
+
+                if (migrator.NeedMigration(UpbringPath))
+                {
+                    migrator.MigrateToLatest(UpbringPath);
+                }
+
                 // No StrictXmlDeserialization for Upbring due to xsi attributes not being recognized
                 // for now, disabled, as we believe we generated properly
                 // StrictXmlDeserializer<Upbring> deserializer = new StrictXmlDeserializer<Upbring>();
@@ -120,6 +132,7 @@ namespace Uplift.Schemas
 
         public void SaveFile()
         {
+            if (string.IsNullOrEmpty(FileVersion)) FileVersion = fileVersion.ToString();
             XmlSerializer serializer = new XmlSerializer(typeof(Upbring));
             using(FileStream fs = new FileStream(UpbringPath, FileMode.Create)) {
                 using(StreamWriter sw = new StreamWriter(fs, System.Text.Encoding.UTF8)) {

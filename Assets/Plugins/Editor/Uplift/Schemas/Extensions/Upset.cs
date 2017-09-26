@@ -28,6 +28,8 @@ namespace Uplift.Schemas
 {
     public partial class Upset
     {
+        public static readonly int fileVersion;
+
         public struct Meta
         {
             public string dirName;
@@ -51,6 +53,5 @@ namespace Uplift.Schemas
             if (version.Patch != null) result += (int)version.Patch;
             return result;
         }
-
     }
 }

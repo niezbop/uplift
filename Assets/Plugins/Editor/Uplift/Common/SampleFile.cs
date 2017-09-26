@@ -27,13 +27,14 @@ using System.IO;
 using System.Text;
 using System.Xml;
 using UnityEngine;
+using Uplift.Schemas;
 
 namespace Uplift.Common
 {
     public class SampleFile
     {
-        internal static readonly string upfile = @"<Upfile>
-  <UnityVersion>{0}</UnityVersion>   
+        internal static readonly string upfile = @"<Upfile FileVersion=""{0}"">
+  <UnityVersion>{1}</UnityVersion>   
   <!-- SAMPLE REPOSITORIES BLOCK
 
   <Repositories>
@@ -122,7 +123,7 @@ namespace Uplift.Common
         {
             XmlDocument sampleFile = new XmlDocument();
 
-            sampleFile.InnerXml = string.Format(upfile, Application.unityVersion);
+            sampleFile.InnerXml = string.Format(upfile, Upfile.fileVersion, Application.unityVersion);
 
             sampleFile.Save("Upfile.xml");
         }

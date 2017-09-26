@@ -11,7 +11,8 @@
     <xs:sequence>
       <xs:element type="InstalledPackage" name="InstalledPackage" maxOccurs="unbounded" minOccurs="0"/>
     </xs:sequence>
-  </xs:complexType>
+    <xs:attribute type="xs:integer" name="FileVersion" />
+  </xs:complexType> 
 
   <xs:complexType name="InstalledPackage">
     <xs:sequence>

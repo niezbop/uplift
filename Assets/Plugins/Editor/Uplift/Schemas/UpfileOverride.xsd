@@ -12,5 +12,6 @@
     <xs:sequence>
       <xs:element type="RepositoriesList" name="Repositories" minOccurs="0" />
     </xs:sequence>
+    <xs:attribute type="xs:integer" name="FileVersion" />
   </xs:complexType>
 </xs:schema>

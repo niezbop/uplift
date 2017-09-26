@@ -13,6 +13,7 @@
       <xs:element type="DependenciesList" name="Dependencies" minOccurs="0" />
       <xs:element type="InstallConfiguration" name="Configuration" minOccurs="0" />
     </xs:sequence>
+    <xs:attribute type="xs:integer" name="FileVersion" />
   </xs:complexType>
 
   <xs:complexType name="InstallConfiguration">
