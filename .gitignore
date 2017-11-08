@@ -53,6 +53,8 @@ Thumbs.db
 /Assets/UPackages/DependencyRoot~0.0.2.meta
 /Assets/UPackages/AnotherDependencyLeaf~0.0.1
 /Assets/UPackages/AnotherDependencyLeaf~0.0.1.meta
+/Assets/UPackages/VoxelGen~0.8.7
+/Assets/UPackages/VoxelGen~0.8.7.meta
 # == UPLIFT GITIGNORE END ==
 
 UpliftTesting/bin

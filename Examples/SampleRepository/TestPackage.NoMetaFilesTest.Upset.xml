@@ -5,4 +5,5 @@
   <PackageName>TestPackage.NoMetaFilesPackageTest</PackageName>
   <PackageVersion>0.0.1</PackageVersion>
   <PackageLicense>Free</PackageLicense>
+  <PackageURI>file://C:/Users/pniez/Documents/uplift/Examples/SampleRepository/TestPackage.NoMetaFilesTest</PackageURI>
 </Upset>

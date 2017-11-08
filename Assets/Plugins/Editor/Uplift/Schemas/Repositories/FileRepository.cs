@@ -28,8 +28,6 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Xml.Serialization;
-using SharpCompress.Archives;
-using SharpCompress.Archives.Tar;
 using Uplift.Extensions;
 using UnityEngine;
 using UnityEditor;
@@ -47,20 +45,37 @@ namespace Uplift.Schemas {
         }
 
         public override TemporaryDirectory DownloadPackage(Upset package) {
-            TemporaryDirectory td = new TemporaryDirectory();
-            
-            string sourcePath = System.IO.Path.Combine(Path, package.MetaInformation.dirName);
+            IURIHandler uriHandler;
 
-            if (Directory.Exists(sourcePath))
-            {
-                Uplift.Common.FileSystemUtil.CopyDirectoryWithMeta(sourcePath, td.Path);
-            }
-            else if (IsUnityPackage(sourcePath))
+            string uri = package.PackageURI;
+
+            if(uri.StartsWith("file://"))
+                uriHandler = new FileHandler();
+            else if(uri.StartsWith("http://"))
+                uriHandler = new HttpHandler();
+            else if(uri.StartsWith("https://"))
+                uriHandler = new HttpHandler();
+            else
+                throw new NotSupportedException("Uplift only supports \"file://something\" for URI in Upsets for now");
+
+            TemporaryDirectory td = uriHandler.OpenURI(uri);
+            
+            string[] entries = Directory.GetFileSystemEntries(td.Path);
+            if(entries == null || entries.Length == 0)
+                throw new ApplicationException(string.Format(
+                    "opening URI at {0} (in package {1}) did not retrieve anything",
+                    uri,
+                    package.PackageName
+                ));
+
+            string sourcePath = Directory.GetFileSystemEntries(td.Path)[0];
+
+            if (IsUnityPackage(sourcePath))
             {
                 var unityPackage = new UnityPackage();
                 unityPackage.Extract(sourcePath, td.Path);
             }
-            else
+            else if (!Directory.Exists(sourcePath))
             {
                 Debug.LogError(string.Format("Package {0} version {1} found at {2} has an unexpected format and cannot be downloaded ", package.PackageName, package.PackageVersion, sourcePath));
             }
@@ -76,83 +91,16 @@ namespace Uplift.Schemas {
         public override Upset[] ListPackages() {
             List<Upset> upsetList = new List<Upset>();
 
-            AddExplodedDirectories(upsetList);
-            AddUnityPackages(upsetList);
+            string[] files = Directory.GetFiles(Path);
+            StrictXmlDeserializer<Upset> deserializer = new StrictXmlDeserializer<Upset>();
 
-            return upsetList.ToArray();
-        }
-
-        private void AddExplodedDirectories(List<Upset> upsetList) {
-            string[] directories =  Directory.GetDirectories(Path);
-            foreach(string directoryPath in directories)
+            foreach(string file in files)
             {
-                string directoryName = directoryPath.Split(System.IO.Path.DirectorySeparatorChar).Last();
-                try
+                if(!file.EndsWith(".Upset.xml")) continue;
+                
+                using (FileStream fs = new FileStream(file, FileMode.Open))
                 {
-                    string upsetPath = Uplift.Common.FileSystemUtil.JoinPaths(Path, directoryName, UpsetFile);
-                    if (!File.Exists(upsetPath)) continue;
-
-                    StrictXmlDeserializer<Upset> deserializer = new StrictXmlDeserializer<Upset>();
-
-                    using (FileStream file = new FileStream(upsetPath, FileMode.Open))
-                    {
-                        Upset upset = deserializer.Deserialize(file);
-                        if (upset.Configuration != null && upset.Configuration.Length != 0)
-                        {
-                            foreach (InstallSpecPath spec in upset.Configuration)
-                            {
-                                spec.Path = Uplift.Common.FileSystemUtil.MakePathOSFriendly(spec.Path);
-                            }
-                        }
-                        upset.MetaInformation.dirName = directoryName;
-                        upsetList.Add(upset);
-                    }
-                }
-                catch(Exception e)
-                {
-                    UnityEngine.Debug.LogErrorFormat("Could not load package at {0}, ignoring it ({1}):\n{2}", directoryName, e.Message, e.StackTrace);
-                }
-            }
-        }
-
-        private void AddUnityPackages(List<Upset> upsetList) {
-            string[] files =  Directory.GetFiles(Path, "*.*");
-            Version Unity5 = new Version{ Major = 5 };
-            foreach(string FileName in files)
-            {
-                try
-                {
-                    if (!IsUnityPackage(FileName))
-                    {
-                        continue;
-                    }
-                    // assume unityPackage doesn't contain an upset file for now. In the future we can support it
-                    Upset upset = TryLoadUpset(FileName);
-                    if (upset == null) continue;
-                    // Note: the spec may contain incomplete unity version here (e.g. 5.6). Maybe we should have a ParseThinUnityVersion
-                    if (VersionParser.ParseIncompleteVersion(upset.UnityVersion) < Unity5) {
-                        throw new NotSupportedException("The package has been packed by a Unity version prior to Unity5, and we do not support this. Contact the package maintainer for updated version.");
-                    }
-                    upsetList.Add(upset);
-                }
-                catch (Exception e)
-                {
-                    UnityEngine.Debug.LogErrorFormat("Could not load package at {0}, ignoring it ({1}):\n{2}", FileName, e.Message, e.StackTrace);
-                }
-            }
-        }
-
-        private static Upset TryLoadUpset(string packagePath)
-        {
-            string upsetPath = Regex.Replace(packagePath, ".unitypackage$", ".Upset.xml", RegexOptions.IgnoreCase);
-
-            if (File.Exists(upsetPath))
-            {
-                StrictXmlDeserializer<Upset> deserializer = new StrictXmlDeserializer<Upset>();
-
-                using (FileStream file = new FileStream(upsetPath, FileMode.Open))
-                {
-                    Upset upset = deserializer.Deserialize(file);
+                    Upset upset = deserializer.Deserialize(fs);
                     if (upset.Configuration != null && upset.Configuration.Length != 0)
                     {
                         foreach (InstallSpecPath spec in upset.Configuration)
@@ -160,17 +108,12 @@ namespace Uplift.Schemas {
                             spec.Path = Uplift.Common.FileSystemUtil.MakePathOSFriendly(spec.Path);
                         }
                     }
-                    upset.MetaInformation.dirName = packagePath.Split(System.IO.Path.DirectorySeparatorChar).Last();
-
-                    return upset;
+                    upset.MetaInformation.dirName = Regex.Replace(file, ".Upset.xml$", ".unitypackage", RegexOptions.IgnoreCase);
+                    upsetList.Add(upset);
                 }
             }
-            else
-            {
-                Debug.LogWarning("Unity package found at " + packagePath + " has no matching Upset. It should be at " + upsetPath);
-            }
 
-            return null;
+            return upsetList.ToArray();
         }
     }
 }

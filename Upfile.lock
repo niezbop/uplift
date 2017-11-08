@@ -1,25 +1,8 @@
 # UPFILE DEPENDENCIES
-PackageX (1.0.0)
-TestPackage.MetaFilesPackageTest (0.0.1+)
 TestPackage.NoMetaFilesPackageTest (0.0.1!)
-TestPackage.UnityPackageTest (0.0.*)
-DependencyRoot (0.0.1+)
-AnotherRoot (0+)
-PluginPackage (0+)
+VoxelGen (0.1+)
 
 # SOLVED DEPENDENCIES
-PackageX (1.0.0)
-TestPackage.MetaFilesPackageTest (0.0.1)
 TestPackage.NoMetaFilesPackageTest (0.0.1)
-TestPackage.UnityPackageTest (0.0.1)
-DependencyRoot (0.0.2)
-	DependencyMiddle (0.0.1)
-	AnotherDependencyLeaf (0.0.1)
-DependencyMiddle (0.0.1)
-	DependencyLeaf (0.0.1)
-DependencyLeaf (0.0.1)
-AnotherDependencyLeaf (0.0.1)
-AnotherRoot (0.0.1)
-	DependencyMiddle (0.0.1)
-PluginPackage (0.0.1)
+VoxelGen (0.8.7)
 

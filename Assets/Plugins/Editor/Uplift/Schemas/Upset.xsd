@@ -10,6 +10,7 @@
       <xs:element type="xs:string" name="PackageName" />
       <xs:element type="xs:string" name="PackageVersion" />
       <xs:element type="xs:string" name="PackageLicense" />
+      <xs:element type="xs:string" name="PackageURI" />
       <xs:element type="DependenciesList" name="Dependencies" minOccurs="0" />
       <xs:element type="InstallConfiguration" name="Configuration" minOccurs="0" />
     </xs:sequence>
