@@ -42,7 +42,7 @@ namespace Uplift.Common
             this.serializer = new XmlSerializer(typeof(T));
         }
 
-        public T Deserialize(FileStream fileStream) {
+        public T Deserialize(Stream fileStream) {
             return StrictDeserialize(
                 () => { return serializer.Deserialize(fileStream); }
             );

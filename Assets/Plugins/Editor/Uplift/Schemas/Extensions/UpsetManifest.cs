@@ -22,27 +22,15 @@
  */
 // --- END LICENSE BLOCK ---
 
-using System;
-using System.Net;
 using Uplift.Common;
 
 namespace Uplift.Schemas
 {
-    public partial class WebRepository : Repository
+    public partial class UpsetManifest
     {
-        public override Upset[] ListPackages()
+        public Upset[] UpsetList
         {
-            StrictXmlDeserializer<UpsetManifest> deserializer = new StrictXmlDeserializer<UpsetManifest>();
-            UpsetManifest manifest;
-
-            ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
-            using (var response = WebRequest.Create(this.Url).GetResponse())
-            using (var stream = response.GetResponseStream())
-            {
-                manifest = deserializer.Deserialize(stream);
-            }
-
-            return manifest.UpsetList;
+            get { return this.Upset; }
         }
     }
 }

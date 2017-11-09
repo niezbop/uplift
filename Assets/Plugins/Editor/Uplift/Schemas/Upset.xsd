@@ -22,5 +22,11 @@
     </xs:sequence>
   </xs:complexType>
 
+  <xs:element name="UpsetManifest" type="UpsetManifest"/>
+  <xs:complexType name="UpsetManifest">
+    <xs:sequence>
+      <xs:element type="Upset" name="Upset" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
   
 </xs:schema>
