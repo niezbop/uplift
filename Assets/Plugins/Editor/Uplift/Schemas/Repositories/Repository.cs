@@ -23,7 +23,9 @@
 // --- END LICENSE BLOCK ---
 
 using System;
+using System.IO;
 using Uplift.Common;
+using UnityEngine;
 
 namespace Uplift.Schemas {
     public abstract partial class Repository : IRepositoryHandler
@@ -36,7 +38,45 @@ namespace Uplift.Schemas {
 
         public virtual TemporaryDirectory DownloadPackage(Upset package)
         {
-            throw new NotImplementedException();
+            IURIHandler uriHandler;
+
+            string uri = package.PackageURI;
+
+            if(uri.StartsWith("file://"))
+                uriHandler = new FileHandler();
+            else if(uri.StartsWith("http://") || uri.StartsWith("https://"))
+                uriHandler = new HttpHandler();
+            else
+                throw new NotSupportedException("Uplift only supports \"file://\", \"http://\" and \"https://\" for URI in Upsets for now");
+
+            TemporaryDirectory td = uriHandler.OpenURI(uri);
+            
+            string[] entries = Directory.GetFileSystemEntries(td.Path);
+            if(entries == null || entries.Length == 0)
+                throw new ApplicationException(string.Format(
+                    "opening URI at {0} (in package {1}) did not retrieve anything",
+                    uri,
+                    package.PackageName
+                ));
+
+            string sourcePath = Directory.GetFileSystemEntries(td.Path)[0];
+
+            if (IsUnityPackage(sourcePath))
+            {
+                var unityPackage = new UnityPackage();
+                unityPackage.Extract(sourcePath, td.Path);
+            }
+            else if (!Directory.Exists(sourcePath))
+            {
+                Debug.LogError(string.Format("Package {0} version {1} found at {2} has an unexpected format and cannot be downloaded ", package.PackageName, package.PackageVersion, sourcePath));
+            }
+
+            return td;
+        }
+        
+        protected virtual bool IsUnityPackage(string Path)
+        {
+            return File.Exists(Path) && ".unitypackage".Equals(System.IO.Path.GetExtension(Path), StringComparison.CurrentCultureIgnoreCase);
         }
     }
 }
