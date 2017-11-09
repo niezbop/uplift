@@ -32,16 +32,28 @@ namespace Uplift.Schemas
     {
         public override Upset[] ListPackages()
         {
-            StrictXmlDeserializer<UpsetManifest> deserializer = new StrictXmlDeserializer<UpsetManifest>();
             UpsetManifest manifest;
-
-            ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
-            using (var response = WebRequest.Create(this.Url).GetResponse())
-            using (var stream = response.GetResponseStream())
+            try
             {
-                manifest = deserializer.Deserialize(stream);
-            }
+                StrictXmlDeserializer<UpsetManifest> deserializer = new StrictXmlDeserializer<UpsetManifest>();
 
+                ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
+                using (var response = WebRequest.Create(this.Url).GetResponse())
+                using (var stream = response.GetResponseStream())
+                {
+                    manifest = deserializer.Deserialize(stream);
+                }
+            }
+            catch(Exception ex)
+            {
+                UnityEngine.Debug.LogErrorFormat(
+                    "There was an error loading the manifest at {0}:\n{1}",
+                    this.Url,
+                    ex
+                );
+                return new Upset[0];
+            }
+            
             return manifest.UpsetList;
         }
     }
