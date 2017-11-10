@@ -25,6 +25,7 @@
 #if UNITY_5_3_OR_NEWER
 using NUnit.Framework;
 using Uplift.Common;
+using Uplift.Requirement;
 
 namespace Uplift.Testing.Unit
 {
@@ -36,13 +37,13 @@ namespace Uplift.Testing.Unit
             [Test]
             public void ParseEmptyRequirement()
             {
-                Assert.IsTrue(VersionParser.ParseRequirement("") is NoRequirement);
+                Assert.IsTrue(RequirementParser.ParseRequirement("") is NoRequirement);
             }
 
             [Test]
             public void ParseMinimalRequirement()
             {
-                IVersionRequirement parsed = VersionParser.ParseRequirement("1.2+");
+                IRequirement parsed = RequirementParser.ParseRequirement("1.2+");
                 Assert.IsTrue(parsed is MinimalVersionRequirement);
                 Assert.AreEqual((parsed as MinimalVersionRequirement).minimal, new Version { Major = 1, Minor = 2 });
             }
@@ -50,7 +51,7 @@ namespace Uplift.Testing.Unit
             [Test]
             public void ParseLoseRequirement()
             {
-                IVersionRequirement parsed = VersionParser.ParseRequirement("1.2");
+                IRequirement parsed = RequirementParser.ParseRequirement("1.2");
                 Assert.IsTrue(parsed is LoseVersionRequirement);
                 Assert.AreEqual((parsed as LoseVersionRequirement).stub, new Version { Major = 1, Minor = 2 });
             }
@@ -58,7 +59,7 @@ namespace Uplift.Testing.Unit
             [Test]
             public void ParseBoundedRequirement()
             {
-                IVersionRequirement parsed = VersionParser.ParseRequirement("1.2.*");
+                IRequirement parsed = RequirementParser.ParseRequirement("1.2.*");
                 Assert.IsTrue(parsed is BoundedVersionRequirement);
                 Assert.AreEqual((parsed as BoundedVersionRequirement).lowerBound, new Version { Major = 1, Minor = 2 });
             }
@@ -66,7 +67,7 @@ namespace Uplift.Testing.Unit
             [Test]
             public void ParseExactRequirement()
             {
-                IVersionRequirement parsed = VersionParser.ParseRequirement("1.2.3!");
+                IRequirement parsed = RequirementParser.ParseRequirement("1.2.3!");
                 Assert.IsTrue(parsed is ExactVersionRequirement);
                 Assert.AreEqual((parsed as ExactVersionRequirement).expected, new Version { Major = 1, Minor = 2, Patch = 3 });
             }
@@ -78,7 +79,7 @@ namespace Uplift.Testing.Unit
                 Assert.Throws<System.ArgumentException>(
                     delegate
                     {
-                        VersionParser.ParseRequirement("not.a.requirement");
+                        RequirementParser.ParseRequirement("not.a.requirement");
                     }
                 );
             }
@@ -136,7 +137,7 @@ namespace Uplift.Testing.Unit
         [TestFixture]
         class NoRequirementTest
         {
-            IVersionRequirement requirement;
+            VersionRequirement requirement;
 
             [OneTimeSetUp]
             protected void Given()
@@ -191,7 +192,7 @@ namespace Uplift.Testing.Unit
         [TestFixture]
         class MinimalVersionRequirementTest
         {
-            IVersionRequirement requirement;
+            VersionRequirement requirement;
 
             [OneTimeSetUp]
             protected void Given()
@@ -290,7 +291,7 @@ namespace Uplift.Testing.Unit
         [TestFixture]
         class LoseVersionRequirementTest
         {
-            IVersionRequirement requirement;
+            VersionRequirement requirement;
 
             [OneTimeSetUp]
             protected void Given()
@@ -420,7 +421,7 @@ namespace Uplift.Testing.Unit
         [TestFixture]
         class BoundedVersionRequirementTest
         {
-            IVersionRequirement requirement;
+            VersionRequirement requirement;
 
             [OneTimeSetUp]
             protected void Given()
@@ -554,7 +555,7 @@ namespace Uplift.Testing.Unit
         [TestFixture]
         class ExactVersionRequirementTest
         {
-            IVersionRequirement requirement;
+            VersionRequirement requirement;
 
             [OneTimeSetUp]
             protected void Given()

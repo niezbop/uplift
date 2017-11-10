@@ -31,32 +31,6 @@ namespace Uplift.Common
 {
     public class VersionParser
     {
-        public static IVersionRequirement ParseRequirement(string requirement)
-        {
-            if (string.IsNullOrEmpty(requirement))
-            {
-                return new NoRequirement();
-            }
-            else if (requirement.EndsWith("!"))
-            {
-                return new ExactVersionRequirement(requirement.TrimEnd('!'));
-            }
-            else if (requirement.EndsWith("+"))
-            {
-                return new MinimalVersionRequirement(requirement.TrimEnd('+'));
-            }
-            else if (requirement.EndsWith(".*"))
-            {
-                return new BoundedVersionRequirement(requirement.TrimEnd('*').TrimEnd('.'));
-            }
-            else
-            {
-                if(ParseVersion(requirement) != new Version { Major = 0 })
-                    return new LoseVersionRequirement(requirement);
-            }
-            throw new ArgumentException("Cannot parse requirement from " + requirement);
-        }
-
         public static Version ParseVersion(string version, bool verbose = true)
         {
             const string matcher = @"(?<major>\d+)\.(?<minor>\d+)\.(?<patch>\d+)";

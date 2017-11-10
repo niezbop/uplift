@@ -181,7 +181,7 @@ namespace Uplift.Packages
                     // Select the ones that match the definition name
                 where packageRepo.Package.PackageName == packageDefinition.Name
                 // And the version definition
-                where packageDefinition.Requirement.IsMetBy(packageRepo.Package.PackageVersion)
+                where packageDefinition.Requirement.IsMetBy(packageRepo.Package)
                 // And use found package
                 select packageRepo
             // As an array

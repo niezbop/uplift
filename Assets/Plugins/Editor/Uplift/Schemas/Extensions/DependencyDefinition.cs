@@ -24,17 +24,18 @@
 
 using System.Xml.Serialization;
 using Uplift.Common;
+using Uplift.Requirement;
 
 namespace Uplift.Schemas
 {
     public partial class DependencyDefinition
     {
         [XmlIgnore]
-        public IVersionRequirement Requirement
+        public IRequirement Requirement
         {
             get
             {
-                return VersionParser.ParseRequirement(Version);
+                return RequirementParser.ParseRequirement(Version);
             }
         }
     }

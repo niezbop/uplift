@@ -24,13 +24,14 @@
 
 using System.Collections.Generic;
 using Uplift.Common;
+using Uplift.Requirement;
 using Uplift.Schemas;
 
 namespace Uplift.DependencyResolution
 {
     public class DependencyNode
     {
-        protected IVersionRequirement requirement;
+        protected IRequirement requirement;
         protected string repository;
         protected string name;
         protected List<DependencyNode> dependencies;
@@ -52,7 +53,7 @@ namespace Uplift.DependencyResolution
         public DependencyNode(string name, string version, string repository, SkipInstallSpec[] skips, OverrideDestinationSpec[] overrides, List<DependencyNode> dependencies)
         {
             this.name = name;
-            this.requirement = VersionParser.ParseRequirement(version);
+            this.requirement = RequirementParser.ParseRequirement(version);
             this.repository = repository;
             this.dependencies = dependencies;
             this.skips = skips;
@@ -62,7 +63,7 @@ namespace Uplift.DependencyResolution
             lowlink = -1;
         }
 
-        public IVersionRequirement Requirement
+        public IRequirement Requirement
         {
             get
             {

@@ -29,6 +29,7 @@ using Uplift.Packages;
 using Uplift.Schemas;
 using Uplift.SourceControl;
 using Uplift.DependencyResolution;
+using Uplift.Requirement;
 using System.Text.RegularExpressions;
 using UnityEditor;
 using System;
@@ -212,7 +213,7 @@ namespace Uplift
                     {
                         foreach(DependencyDefinition def in conflicting)
                         {                           
-                            if(!def.Requirement.IsMetBy(unmodifiable.First(pr => pr.Package.PackageName == def.Name).Package.PackageVersion))
+                            if(!def.Requirement.IsMetBy(unmodifiable.First(pr => pr.Package.PackageName == def.Name).Package))
                                 throw new ApplicationException("Existing dependency on " + def.Name + " would be broken when installing. Please update it manually.");
                         }
 
@@ -265,7 +266,7 @@ namespace Uplift
 
         private void SolveVersionConflict(ref DependencyNode existing, DependencyNode compared)
         {
-            IVersionRequirement restricted;
+            IRequirement restricted;
             try
             {
                 restricted = existing.Requirement.RestrictTo(compared.Requirement);

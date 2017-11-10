@@ -109,7 +109,7 @@ namespace Uplift.Windows
                 else
                     EditorGUILayout.HelpBox("Package is up to date!", MessageType.Info);
 
-                if(!definition.Requirement.IsMetBy(installed.Version))
+                if(!definition.Requirement.IsMetBy(installed))
                     EditorGUILayout.HelpBox(
                         "The version of the package currently installed does not match the requirements of your project!",
                         installed.Version != bestMatch.Package.PackageVersion ? MessageType.Warning : MessageType.Error

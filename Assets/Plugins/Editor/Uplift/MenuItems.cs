@@ -69,7 +69,7 @@ namespace Uplift
                         else
                             message += "is up to date.";
                         
-                        if(!state.definition.Requirement.IsMetBy(state.installed.Version))
+                        if(!state.definition.Requirement.IsMetBy(state.installed))
                             message += "\nWarning: the package currently installed does not match your requirements";
                     
                     }
