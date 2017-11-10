@@ -68,9 +68,9 @@ namespace Uplift.Testing.Integration
                 upfile = Upfile.Instance();
                 manager = UpliftManager.Instance();
 
-                upfile.Dependencies[0].Version = "1.0.0";
+                upfile.Dependencies[0].Target = "1.0.0";
                 manager.InstallDependencies();
-                upfile.Dependencies[0].Version = "1.0.1";
+                upfile.Dependencies[0].Target = "1.0.1";
             }
             finally
             {

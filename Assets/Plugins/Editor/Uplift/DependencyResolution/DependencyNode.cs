@@ -43,18 +43,16 @@ namespace Uplift.DependencyResolution
         public DependencyNode() { }
         public DependencyNode(DependencyDefinition definition) : this(
                 definition.Name,
-                definition.Version,
-                definition.Repository,
+                definition.Target,
                 definition.SkipInstall,
                 definition.OverrideDestination,
                 null
                 ) { }
-        public DependencyNode(string name, string version, string repository) : this(name, version, repository, null, null, null) { }
-        public DependencyNode(string name, string version, string repository, SkipInstallSpec[] skips, OverrideDestinationSpec[] overrides, List<DependencyNode> dependencies)
+        public DependencyNode(string name, string version) : this(name, version, null, null, null) { }
+        public DependencyNode(string name, string version, SkipInstallSpec[] skips, OverrideDestinationSpec[] overrides, List<DependencyNode> dependencies)
         {
             this.name = name;
             this.requirement = RequirementParser.ParseRequirement(version);
-            this.repository = repository;
             this.dependencies = dependencies;
             this.skips = skips;
             this.overrides = overrides;
@@ -74,18 +72,7 @@ namespace Uplift.DependencyResolution
                 requirement = value;
             }
         }
-
-        public string Repository
-        {
-            get
-            {
-                return repository;
-            }
-            set
-            {
-                repository = value;
-            }
-        }
+        
         public string Name
         {
             get

@@ -95,7 +95,7 @@ namespace Uplift.Windows
                     new DependencyDefinition
                     {
                         Name = "Enter a package name",
-                        Version = "Enter a version"
+                        Target = "Enter a version"
                     },
                     def => DependencyField(def)
                 );
@@ -168,7 +168,7 @@ namespace Uplift.Windows
             EditorGUILayout.BeginVertical();
             EditorGUILayout.BeginHorizontal();
             temp.Name = EditorGUILayout.TextField("Package Name:", temp.Name);
-            temp.Version = EditorGUILayout.TextField("Package Version:", temp.Version);
+            temp.Target = EditorGUILayout.TextField("Package Version:", temp.Target);
             EditorGUILayout.EndHorizontal();
             OverrideDestinationSpec defaultODS = new OverrideDestinationSpec { Type = InstallSpecType.Base, Location = "Enter a location" };
             SkipInstallSpec defaultSIS = new SkipInstallSpec { Type = InstallSpecType.Docs };

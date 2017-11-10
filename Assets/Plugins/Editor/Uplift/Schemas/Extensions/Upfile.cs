@@ -213,7 +213,7 @@ namespace Uplift.Schemas
             
             XmlElement dependency = document.CreateElement("Package");
             dependency.SetAttribute("Name", def.Name);
-            dependency.SetAttribute("Version", def.Version);
+            dependency.SetAttribute("Version", def.Target);
             if(def.OverrideDestination != null)
             {
                 XmlElement overrideNode = document.CreateElement("OverrideDestination");

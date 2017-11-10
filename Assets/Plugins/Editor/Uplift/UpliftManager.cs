@@ -178,7 +178,7 @@ namespace Uplift
                 DependencyDefinition[] modifiedDependencies = 
                     upfileDependencies
                     .Where(def => !snapshot.upfileDependencies.Any(
-                        d => d.Name == def.Name && d.Version == def.Version
+                        d => d.Name == def.Name && d.Target == def.Target
                         ))
                     .ToArray();
                 if(modifiedDependencies.Length == 0)
@@ -291,7 +291,7 @@ namespace Uplift
             string result = "# UPFILE DEPENDENCIES\n";
             foreach(DependencyDefinition def in snapshot.upfileDependencies)
             {
-                result += string.Format("{0} ({1})\n", def.Name, def.Version);
+                result += string.Format("{0} ({1})\n", def.Name, def.Target);
             }
 
             result += "\n# SOLVED DEPENDENCIES\n";
@@ -303,7 +303,7 @@ namespace Uplift
                 if(package.Dependencies != null && package.Dependencies.Length != 0)
                     foreach(DependencyDefinition dependency in package.Dependencies)
                     {
-                        result += string.Format("\t{0} ({1})\n", dependency.Name, dependency.Version);
+                        result += string.Format("\t{0} ({1})\n", dependency.Name, dependency.Target);
                     }
             }
 
@@ -338,7 +338,7 @@ namespace Uplift
                     DependencyDefinition temp = new DependencyDefinition
                     {
                         Name = match.Groups[1].Value,
-                        Version = match.Groups[2].Value
+                        Target = match.Groups[2].Value
                     };
                     upfileDependencyList.Add(temp);
                 }
@@ -363,7 +363,7 @@ namespace Uplift
                     PackageRepo temp = packageList.FindPackageAndRepository(new DependencyDefinition
                     {
                         Name = match.Groups[1].Value,
-                        Version = match.Groups[2].Value + "!" // Check for exact version
+                        Target = match.Groups[2].Value + "!" // Check for exact version
                     });
 
                     if(temp.Package != null && temp.Repository != null)
@@ -425,7 +425,7 @@ namespace Uplift
                         {
                             DependencyDefinition def = upfile.Dependencies.Any(d => d.Name == pr.Package.PackageName) ?
                                 upfile.Dependencies.First(d => d.Name == pr.Package.PackageName) :
-                                new DependencyDefinition() { Name = pr.Package.PackageName, Version = pr.Package.PackageVersion };
+                                new DependencyDefinition() { Name = pr.Package.PackageName, Target = pr.Package.PackageVersion };
 
                             using (TemporaryDirectory td = pr.Repository.DownloadPackage(pr.Package))
                             {

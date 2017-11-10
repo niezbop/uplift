@@ -35,7 +35,7 @@ namespace Uplift.Schemas
         {
             get
             {
-                return RequirementParser.ParseRequirement(Version);
+                return RequirementParser.ParseRequirement(Target);
             }
         }
     }

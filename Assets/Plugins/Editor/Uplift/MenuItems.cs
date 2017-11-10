@@ -57,7 +57,7 @@ namespace Uplift
 
                 foreach(UpliftManager.DependencyState state in states)
                 {
-                    string message = string.Format("Package {0} ({1}) ", state.definition.Name, state.definition.Version);
+                    string message = string.Format("Package {0} ({1}) ", state.definition.Name, state.definition.Target);
                     if(state.installed != null)
                     {
                         if(state.installed.Version != state.bestMatch.Package.PackageVersion)

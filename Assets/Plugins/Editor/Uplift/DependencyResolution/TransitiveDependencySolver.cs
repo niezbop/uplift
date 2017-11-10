@@ -62,7 +62,7 @@ namespace Uplift.DependencyResolution
 
         private string RecursivelyListDependencies(DependencyDefinition def, string indent = "")
         {
-            string result = indent + def.Name + " " + def.Requirement + " " + def.Version + "\n";
+            string result = indent + def.Name + " " + def.Requirement + " " + def.Target + "\n";
             PackageRepo pr = PackageList.Instance().FindPackageAndRepository(def);
             if(pr.Package != null && pr.Package.Dependencies != null)
             {
@@ -83,8 +83,7 @@ namespace Uplift.DependencyResolution
                 result[i] = new DependencyDefinition()
                 {
                     Name = current.Name,
-                    Version = current.Requirement.ToString(),
-                    Repository = current.Repository,
+                    Target = current.Requirement.ToString(),
                     SkipInstall = current.skips,
                     OverrideDestination = current.overrides
                 };
