@@ -7,6 +7,19 @@ namespace Uplift.Requirement
     {
         public static IRequirement ParseRequirement(string requirement)
         {
+            if(VersionParser.ParseVersion(requirement) != new Uplift.Common.Version { Major = 0 })
+            {
+                return ParseVersionRequirement(requirement);
+            }
+            else if(requirement.StartsWith("git:"))
+            {
+                return new GitRequirement(requirement);
+            }
+            throw new ArgumentException("Cannot parse requirement from " + requirement);
+        }
+
+        private static VersionRequirement ParseVersionRequirement(string requirement)
+        {
             if (string.IsNullOrEmpty(requirement))
             {
                 return new NoRequirement();
@@ -23,12 +36,18 @@ namespace Uplift.Requirement
             {
                 return new BoundedVersionRequirement(requirement.TrimEnd('*').TrimEnd('.'));
             }
-            else
-            {
-                if(VersionParser.ParseVersion(requirement) != new Uplift.Common.Version { Major = 0 })
-                    return new LoseVersionRequirement(requirement);
-            }
-            throw new ArgumentException("Cannot parse requirement from " + requirement);
+            return new LoseVersionRequirement(requirement);
         }
+    }
+
+    public class IncompatibleRequirementException : Exception
+    {
+        public IncompatibleRequirementException() : base("Incompatible requirements were identified") { }
+        public IncompatibleRequirementException(string message) : base(message) { }
+        public IncompatibleRequirementException(IRequirement a, IRequirement b)
+            : this(string.Format("Requirements {0} and {1} are not compatible", a.ToString(), b.ToString())) { }
+        public IncompatibleRequirementException(string format, params object[] args) : base(string.Format(format, args)) { }
+        public IncompatibleRequirementException(string message, Exception innerException) : base(message, innerException) { }
+        public IncompatibleRequirementException(string format, Exception innerException, params object[] args) : base(string.Format(format, args), innerException) { }
     }
 }

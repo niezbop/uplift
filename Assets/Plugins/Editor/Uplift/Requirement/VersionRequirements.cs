@@ -22,13 +22,12 @@
  */
 // --- END LICENSE BLOCK ---
 
-using System;
 using Uplift.Requirement;
 using Uplift.Schemas;
+using Uplift.Common;
 
-namespace Uplift.Common
+namespace Uplift.Requirement
 {
-    #region VersionRequirement
     public abstract class VersionRequirement : IRequirement
     {
         public virtual bool IsMetBy(Upset package)
@@ -223,18 +222,4 @@ namespace Uplift.Common
             return expected.ToString() + "!";
         }
     }
-    #endregion
-
-    #region Exception
-    public class IncompatibleRequirementException : Exception
-    {
-        public IncompatibleRequirementException() : base("Incompatible requirements were identified") { }
-        public IncompatibleRequirementException(string message) : base(message) { }
-        public IncompatibleRequirementException(IRequirement a, IRequirement b)
-            : this(string.Format("Requirements {0} and {1} are not compatible", a.ToString(), b.ToString())) { }
-        public IncompatibleRequirementException(string format, params object[] args) : base(string.Format(format, args)) { }
-        public IncompatibleRequirementException(string message, Exception innerException) : base(message, innerException) { }
-        public IncompatibleRequirementException(string format, Exception innerException, params object[] args) : base(string.Format(format, args), innerException) { }
-    }
-    #endregion
 }
