@@ -1,5 +1,6 @@
 using System;
 using Uplift.Common;
+using Version = Uplift.Common.Version;
 
 namespace Uplift.Requirement
 {
@@ -7,13 +8,17 @@ namespace Uplift.Requirement
     {
         public static IRequirement ParseRequirement(string requirement)
         {
-            if(VersionParser.ParseVersion(requirement) != new Uplift.Common.Version { Major = 0 })
+            if(VersionParser.ParseVersion(requirement, false) != new Version(-1, null, null, null))
             {
                 return ParseVersionRequirement(requirement);
             }
             else if(requirement.StartsWith("git:"))
             {
                 return new GitRequirement(requirement);
+            }
+            else if(string.IsNullOrEmpty(requirement))
+            {
+                return new NoRequirement();
             }
             throw new ArgumentException("Cannot parse requirement from " + requirement);
         }

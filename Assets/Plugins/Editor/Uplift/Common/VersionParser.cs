@@ -26,6 +26,7 @@ using System;
 using System.Text.RegularExpressions;
 using UnityEngine;
 using Uplift.Schemas;
+using Version = Uplift.Common.Version;
 
 namespace Uplift.Common
 {
@@ -35,13 +36,8 @@ namespace Uplift.Common
         {
             const string matcher = @"(?<major>\d+)\.(?<minor>\d+)\.(?<patch>\d+)";
             Match matchObject = Regex.Match(version, matcher);
-            Version result = new Version
-            {
-                Major = 0,
-                Minor = 0,
-                Patch = 0,
-                Optional = null
-            };
+            Version result = new Version(-1, null, null, null);
+
             try
             {
                 result.Major = int.Parse(matchObject.Groups["major"].ToString());
@@ -60,13 +56,7 @@ namespace Uplift.Common
 
         public static Version ParseIncompleteVersion(string version)
         {
-            Version result = new Version
-            {
-                Major = 0,
-                Minor = null,
-                Patch = null,
-                Optional = null
-            };
+            Version result = new Version(-1, null, null, null);
 
             string rest = "";
             result.Major = ParseBeginning(version, ref rest);
@@ -95,7 +85,7 @@ namespace Uplift.Common
             Match matchObject = Regex.Match(input, matcher);
             int item = 0;
             try { item = int.Parse(matchObject.Groups["item"].ToString()); }
-            catch (FormatException) { return 0; }
+            catch (FormatException) { return -1; }
             try
             {
                 string identifier = matchObject.Groups["identifier"].ToString();
