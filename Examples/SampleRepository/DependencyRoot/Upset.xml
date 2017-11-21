@@ -5,6 +5,6 @@
   <PackageVersion>0.0.1</PackageVersion>
   <PackageLicense>Free</PackageLicense>
   <Dependencies>
-    <Package Name="DependencyMiddle" Version="0.0.1" />
+    <Package Name="DependencyMiddle" Target="0.0.1" />
   </Dependencies>
 </Upset>

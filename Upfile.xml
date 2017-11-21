@@ -14,12 +14,12 @@
     <GizmoPath Location="Assets/Gizmos" SkipPackageStructure="true" />
   </Configuration>
   <Dependencies>
-    <Package Name="PackageX" Version="1.0.0" />
-    <Package Name="TestPackage.MetaFilesPackageTest" Version="0.0.1+" />
-    <Package Name="TestPackage.NoMetaFilesPackageTest" Version="0.0.1!" />
-    <Package Name="TestPackage.UnityPackageTest" Version="0.0.*" />
-    <Package Name="DependencyRoot" Version="0.0.1+" />
-    <Package Name="AnotherRoot" Version="0+" />
-    <Package Name="PluginPackage" Version="0+" />
+    <Package Name="PackageX" Target="1.0.0" />
+    <Package Name="TestPackage.MetaFilesPackageTest" Target="0.0.1+" />
+    <Package Name="TestPackage.NoMetaFilesPackageTest" Target="0.0.1!" />
+    <Package Name="TestPackage.UnityPackageTest" Target="0.0.*" />
+    <Package Name="DependencyRoot" Target="0.0.1+" />
+    <Package Name="AnotherRoot" Target="0+" />
+    <Package Name="PluginPackage" Target="0+" />
   </Dependencies>
 </Upfile>

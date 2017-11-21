@@ -5,7 +5,7 @@
   <PackageVersion>0.0.2</PackageVersion>
   <PackageLicense>Free</PackageLicense>
   <Dependencies>
-    <Package Name="DependencyMiddle" Version="0.0.1" />
-    <Package Name="AnotherDependencyLeaf" Version="0.0.1" />
+    <Package Name="DependencyMiddle" Target="0.0.1" />
+    <Package Name="AnotherDependencyLeaf" Target="0.0.1" />
   </Dependencies>
 </Upset>

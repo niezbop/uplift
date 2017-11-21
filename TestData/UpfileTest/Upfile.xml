@@ -13,6 +13,6 @@
     <FileRepository Path="Path/To/Some/Repository"/>
   </Repositories>
   <Dependencies>
-      <Package Name="test_package" Version="1.0" />
+      <Package Name="test_package" Target="1.0" />
   </Dependencies>
 </Upfile>

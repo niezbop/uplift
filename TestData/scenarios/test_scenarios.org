@@ -170,8 +170,8 @@
       <FileRepository Path="../Repository"/>
     </Repositories>
     <Dependencies>
-      <Package Name="tools.SimpleBuild" Version="1.0.27"/>
-      <Package Name="JSON NET For Unity" Version="1.5.0"/>
+      <Package Name="tools.SimpleBuild" Target="1.0.27"/>
+      <Package Name="JSON NET For Unity" Target="1.5.0"/>
     </Dependencies>
 
   "Install Dependencies" installs
@@ -186,8 +186,8 @@
       <FileRepository Path="../Repository"/>
     </Repositories>
     <Dependencies>
-      <Package Name="tools.SimpleBuild" Version="1.0.33"/>
-      <Package Name="JSON NET For Unity" Version="1.5.0"/>
+      <Package Name="tools.SimpleBuild" Target="1.0.33"/>
+      <Package Name="JSON NET For Unity" Target="1.5.0"/>
     </Dependencies>
 
   "Install Dependencies" upgrades

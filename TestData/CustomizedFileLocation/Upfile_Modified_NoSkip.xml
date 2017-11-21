@@ -10,6 +10,6 @@
     <FileRepository Path="../TestData/CustomizedFileLocation/PackageRepoModifiedNoSkip" />
   </Repositories>
   <Dependencies>
-    <Package Name="package_c" Version="1.3.5"/>
+    <Package Name="package_c" Target="1.3.5"/>
   </Dependencies>
 </Upfile>

@@ -8,6 +8,6 @@
     <FileRepository Path="../TestData/PackageUpdating/PackageRepo" />
   </Repositories>
   <Dependencies>
-    <Package Name="package_a" Version="1.0.1"/>
+    <Package Name="package_a" Target="1.0.1"/>
   </Dependencies>
 </Upfile>

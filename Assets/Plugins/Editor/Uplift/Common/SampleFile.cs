@@ -109,7 +109,7 @@ namespace Uplift.Common
   <!-- SAMPLE DEPENDENCIES BLOCK
 
   <Dependencies>
-    <Package Name=""SomePackage"" Repository=""Optional.Repository"" Version=""Optional.Version.Spec"" />
+    <Package Name=""SomePackage"" Repository=""Optional.Repository"" Target=""Optional.Version.Spec"" />
     <Package Name=""PackageA"">
       <MajorVersionMin>3</MajorVersionMin>
     </Package>

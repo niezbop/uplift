@@ -9,7 +9,7 @@
     <FileRepository Path="../TestData/PackageNuking/PackageRepo" />
   </Repositories>
   <Dependencies>
-    <Package Name="package_d" Version="1.8.6"/>
-    <Package Name="filler_package" Version="0.0.0"/>
+    <Package Name="package_d" Target="1.8.6"/>
+    <Package Name="filler_package" Target="0.0.0"/>
   </Dependencies>
 </Upfile>
