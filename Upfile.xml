@@ -16,6 +16,7 @@
   <Dependencies>
     <Package Name="PackageX" Target="1.0.0" />
     <Package Name="TestPackage.MetaFilesPackageTest" Target="0.0.1+" />
+    <Package Name="GitPackage" Target="git:https://github.com/niezbop/Voxel-Terrain-Generation.git" />
     <Package Name="TestPackage.NoMetaFilesPackageTest" Target="0.0.1!" />
     <Package Name="TestPackage.UnityPackageTest" Target="0.0.*" />
     <Package Name="DependencyRoot" Target="0.0.1+" />

@@ -12,7 +12,7 @@ namespace Uplift.Requirement
             {
                 return ParseVersionRequirement(requirement);
             }
-            else if(requirement.StartsWith("git:"))
+            else if(requirement.StartsWith("git"))
             {
                 return new GitRequirement(requirement);
             }
