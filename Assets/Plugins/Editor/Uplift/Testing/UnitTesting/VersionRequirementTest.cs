@@ -137,7 +137,7 @@ namespace Uplift.Testing.Unit
         [TestFixture]
         class NoRequirementTest
         {
-            VersionRequirement requirement;
+            IRequirement requirement;
 
             [OneTimeSetUp]
             protected void Given()
@@ -148,9 +148,8 @@ namespace Uplift.Testing.Unit
             [Test]
             public void IsMetBy()
             {
-                Assert.IsTrue(requirement.IsMetBy("0.0.0"));
-                Assert.IsTrue(requirement.IsMetBy("1.0.0"));
-                Assert.IsTrue(requirement.IsMetBy("2.0.0"));
+                Assert.IsTrue(requirement.IsMetBy(new Schemas.Upset()));
+                Assert.IsTrue(requirement.IsMetBy(new Schemas.InstalledPackage()));
             }
 
             [Test]

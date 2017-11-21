@@ -46,14 +46,6 @@ namespace Uplift.Requirement
         public abstract IRequirement RestrictTo(IRequirement other);
     }
 
-    // When no version requirement is specified
-    public class NoRequirement : VersionRequirement
-    {
-        public override bool IsMetBy(Version version) { return true; }
-        public override IRequirement RestrictTo(IRequirement other) { return other; }
-        public override string ToString() { return ""; }
-    }
-
     // When minimal+ is specified
     public class MinimalVersionRequirement : VersionRequirement
     {

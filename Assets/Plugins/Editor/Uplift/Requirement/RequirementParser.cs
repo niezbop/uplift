@@ -25,11 +25,7 @@ namespace Uplift.Requirement
 
         private static VersionRequirement ParseVersionRequirement(string requirement)
         {
-            if (string.IsNullOrEmpty(requirement))
-            {
-                return new NoRequirement();
-            }
-            else if (requirement.EndsWith("!"))
+            if (requirement.EndsWith("!"))
             {
                 return new ExactVersionRequirement(requirement.TrimEnd('!'));
             }
