@@ -6,23 +6,20 @@ using FileSystemUtil = Uplift.Common.FileSystemUtil;
 
 namespace Uplift.Common
 {
-    public class TemporaryGitClone : IDisposable
+    public class TemporaryGitClone : TemporaryDirectory
     {
-        private static readonly string stub = "uplift_temp_clone";
-        private TemporaryDirectory parent;
-        private bool disposed = false;
-        public string RepositoryPath
-        {
-            get { return Path.Combine(parent.Path, stub); }
-        }
+        private static readonly string stub = "uplift_temp_clone_";
         
         public TemporaryGitClone(string uri, string branch = "master", bool shallow = true)
         {
-            parent = new TemporaryDirectory();
+            Path = System.IO.Path.Combine(
+                System.IO.Path.GetTempPath(),
+                stub + System.IO.Path.GetFileNameWithoutExtension(uri)
+            );
             try
             {
                 StringBuilder argumentsBuilder = new StringBuilder();
-                argumentsBuilder.Append(string.Format("/C git clone --single-branch {0} {1} --branch={2}", uri, RepositoryPath, branch));
+                argumentsBuilder.Append(string.Format("/C git clone --single-branch {0} {1} --branch={2}", uri, Path, branch));
                 if(shallow) argumentsBuilder.Append(" --depth=1");
 
                 System.Diagnostics.Process process = new System.Diagnostics.Process();
@@ -56,18 +53,18 @@ namespace Uplift.Common
             Dispose();
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
             if (!disposed)
             {
                 // Make .git files not readonly
-                string[] tempEntries = FileSystemUtil.RecursivelyListFiles(Path.Combine(RepositoryPath, ".git")).ToArray();
+                string[] tempEntries = FileSystemUtil.RecursivelyListFiles(System.IO.Path.Combine(Path, ".git")).ToArray();
                 for(int i = 0; i < tempEntries.Length; i++)
                 {
                     FileInfo fileInfo = new FileInfo(tempEntries[i]);
                     fileInfo.IsReadOnly = false;
                 }
-                parent.Dispose();
+                base.Dispose();
                 disposed = true;
             }
         }

@@ -29,7 +29,7 @@ namespace Uplift.Common
 {
     public class TemporaryDirectory : IDisposable {
 
-        public readonly string Path;
+        public string Path;
         protected bool disposed;
 
         public TemporaryDirectory() {
@@ -45,7 +45,7 @@ namespace Uplift.Common
             Dispose();
         }
 
-        public void Dispose()
+        public virtual void Dispose()
         {
             if (!disposed)
             {
