@@ -48,6 +48,10 @@ namespace Uplift.Schemas {
         {
             return new Upset[] { package };
         }
-
+        
+        public override string ToString()
+        {
+            return "Git repository at " + urlField;
+        }
     }
 }
