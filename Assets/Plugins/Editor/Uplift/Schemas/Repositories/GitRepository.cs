@@ -28,14 +28,25 @@ using Uplift.Common;
 namespace Uplift.Schemas {
     public partial class GitRepository : Repository
     {
-        public override TemporaryDirectory DownloadPackage(Upset package)
+        [System.Xml.Serialization.XmlIgnore]
+        public Upset package;
+        public override TemporaryDirectory DownloadPackage(Upset _package)
         {
-            throw new NotImplementedException();
+            if(package != _package)
+            {
+                throw new ArgumentException(string.Format(
+                    "Package {0} ({1}) can't be downloaded from this git repository!",
+                    _package.PackageName,
+                    _package.PackageVersion
+                ));
+            }
+
+            return new TemporaryGitClone(urlField);
         }
 
         public override Upset[] ListPackages()
         {
-            throw new NotImplementedException();
+            return new Upset[] { package };
         }
 
     }

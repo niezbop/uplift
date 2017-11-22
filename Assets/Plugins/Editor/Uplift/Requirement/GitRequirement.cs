@@ -16,7 +16,6 @@ namespace Uplift.Requirement
         public GitRequirement(string _url)
         {
             url = _url;
-            string fetchedPackageVersion = null;
             string urlPattern = @"git:(.+)#?(.*)?";
             Regex reg = new Regex(urlPattern);
             Match match = reg.Match(url);
@@ -25,9 +24,10 @@ namespace Uplift.Requirement
             if(match.Groups.Count >= 3 && !string.IsNullOrEmpty(match.Groups[2].Value))
                 branch = match.Groups[2].Value;
 
+            Upset package = null;
             using(TemporaryGitClone clone = new TemporaryGitClone(address, branch, true))
             {
-                string[] candidateUpsets = System.IO.Directory.GetFiles(clone.RepositoryPath, "*Upset.xml", SearchOption.TopDirectoryOnly);
+                string[] candidateUpsets = System.IO.Directory.GetFiles(clone.Path, "*Upset.xml", SearchOption.TopDirectoryOnly);
                 if(candidateUpsets.Length < 1)
                     throw new System.ApplicationException("No Upset file in repository at " + url);
 
@@ -37,11 +37,13 @@ namespace Uplift.Requirement
                 StrictXmlDeserializer<Upset> deserializer = new StrictXmlDeserializer<Upset>();
                 using (FileStream file = new FileStream(candidateUpsets[0], FileMode.Open))
                 {
-                    fetchedPackageVersion = deserializer.Deserialize(file).PackageVersion;
+                    package = deserializer.Deserialize(file);
                 }
             }
-            
-            innerRequirement = new ExactVersionRequirement(fetchedPackageVersion);
+
+            innerRequirement = new ExactVersionRequirement(package.PackageVersion);
+
+            Uplift.Packages.PackageList.Instance().LoadPackages(new GitRepository { Url = url, package = package});
         }
         
         public bool IsMetBy(Upset package)
