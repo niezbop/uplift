@@ -43,6 +43,7 @@ namespace Uplift.Schemas
             }
             return result;
         }
+
         public int PackageVersionAsNumber()
         {
             Version version =  VersionParser.ParseVersion(PackageVersion);
@@ -52,5 +53,19 @@ namespace Uplift.Schemas
             return result;
         }
 
+        public static bool operator !=(Upset a, Upset b) { return !(a == b); }
+        public static bool operator ==(Upset a, Upset b)
+        {
+            if (ReferenceEquals(a, b))
+            {
+                return true;
+            }
+            if (ReferenceEquals(a, null) || ReferenceEquals(b, null))
+            {
+                return false;
+            }
+
+            return a.PackageName == b.PackageName && a.PackageVersion == b.PackageVersion;
+        }
     }
 }
