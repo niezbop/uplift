@@ -33,11 +33,11 @@ namespace Uplift.Export
 #endif
     class PackageExportData : ScriptableObject, ICloneable
     {
-        public  string    packageName     =  "";
-        public  string    packageVersion  =  "";
-        public  string    license         =  "";
-        public  string    targetDir       =  "target";
-        public string[] pathsToExport       = new string[0];
+        public string packageName = "";
+        public string packageVersion = "";
+        public string license = "";
+        public string targetDir = "target";
+        public string[] pathsToExport = new string[0];
         public string templateUpsetFile = "";
 
         public object Clone()
