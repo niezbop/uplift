@@ -25,6 +25,7 @@
 using UnityEngine;
 using UnityEditor;
 using System;
+using Uplift.Schemas;
 
 namespace Uplift.Export
 {
@@ -39,6 +40,8 @@ namespace Uplift.Export
         public string targetDir = "target";
         public string[] pathsToExport = new string[0];
         public string templateUpsetFile = "";
+        public DependencyDefinition[] dependencies = new DependencyDefinition[0];
+        public InstallSpecPath[] configuration = new InstallSpecPath[0];
 
         public object Clone()
         {
