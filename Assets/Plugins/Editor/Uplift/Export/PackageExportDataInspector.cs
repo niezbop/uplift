@@ -3,6 +3,8 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 using Object = UnityEngine.Object;
+using Uplift.Common.Editor;
+using Uplift.Schemas;
 
 namespace Uplift.Export
 {
@@ -11,6 +13,8 @@ namespace Uplift.Export
     {
         private PackageExportData packageExportData;
         private bool showPathspathsToExport = true;
+        private bool showDependencies = true;
+        private bool showConfiguration = true;
 
         public void OnEnable()
         {
@@ -69,6 +73,58 @@ namespace Uplift.Export
                 if(GUILayout.Button("+"))
                 {
                     Array.Resize<string>(ref packageExportData.pathsToExport, packageExportData.pathsToExport.Length + 1);
+                    EditorUtility.SetDirty(packageExportData);
+                }
+            }
+
+            showDependencies = EditorGUILayout.Foldout(showDependencies, "Dependencies");
+            if(showDependencies)
+            {
+                EditorGUI.indentLevel += 1;
+                for (int i = 0; i < packageExportData.dependencies.Length; i++)
+                {
+                    EditorGUILayout.BeginHorizontal();
+                    packageExportData.dependencies[i] = UpliftGUILayout.DependencyField("Dependency", packageExportData.dependencies[i]);
+                    if (GUILayout.Button("X", GUILayout.Width(20.0f)))
+                    {
+                        var tempDependencies = new List<DependencyDefinition>(packageExportData.dependencies);
+                        tempDependencies.RemoveAt(i);
+                        packageExportData.dependencies = tempDependencies.ToArray();
+                        EditorUtility.SetDirty(packageExportData);
+                    }
+                    EditorGUILayout.EndHorizontal();
+                }
+                EditorGUI.indentLevel -= 1;
+                if (GUILayout.Button("+"))
+                {
+                    Array.Resize<DependencyDefinition>(ref packageExportData.dependencies, packageExportData.dependencies.Length + 1);
+                    packageExportData.dependencies[packageExportData.dependencies.Length - 1] = new DependencyDefinition();
+                    EditorUtility.SetDirty(packageExportData);
+                }
+            }
+
+            showConfiguration = EditorGUILayout.Foldout(showConfiguration, "Configuration");
+            if(showConfiguration)
+            {
+                EditorGUI.indentLevel += 1;
+                for (int i = 0; i < packageExportData.configuration.Length; i++)
+                {
+                    EditorGUILayout.BeginHorizontal();
+                    packageExportData.configuration[i] = UpliftGUILayout.InstallSpecPathField("Spec", packageExportData.configuration[i]);
+                    if (GUILayout.Button("X", GUILayout.Width(20.0f)))
+                    {
+                        var tempConfig = new List<InstallSpecPath>(packageExportData.configuration);
+                        tempConfig.RemoveAt(i);
+                        packageExportData.configuration = tempConfig.ToArray();
+                        EditorUtility.SetDirty(packageExportData);
+                    }
+                    EditorGUILayout.EndHorizontal();
+                }
+                EditorGUI.indentLevel -= 1;
+                if (GUILayout.Button("+"))
+                {
+                    Array.Resize<InstallSpecPath>(ref packageExportData.configuration, packageExportData.configuration.Length + 1);
+                    packageExportData.configuration[packageExportData.configuration.Length - 1] = new InstallSpecPath();
                     EditorUtility.SetDirty(packageExportData);
                 }
             }
