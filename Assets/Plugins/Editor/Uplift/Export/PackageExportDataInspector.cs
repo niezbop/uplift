@@ -13,6 +13,7 @@ namespace Uplift.Export
         private bool showPathspathsToExport = true;
         private bool showDependencyList = true;
         private bool showSpecPathList = true;
+        private string templateUpsetFile = "";
 
         public void OnEnable()
         {
@@ -29,9 +30,48 @@ namespace Uplift.Export
             packageExportData.license  = EditorGUILayout.TextField("License", packageExportData.license);
 
 #region UpsetTemplateReplacement
+    #region ImportFromUpset
+            EditorGUILayout.Separator();
+            EditorGUILayout.LabelField("Additional Package Information", EditorStyles.boldLabel);
+            EditorGUILayout.HelpBox("The template upset file is used to get the dependencies and the configuration of the package", MessageType.Info);
+
+            EditorGUILayout.BeginHorizontal();
+
+            if (GUILayout.Button("Import from template"))
+            {
+                System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(Uplift.Schemas.Upset));
+
+                if (string.IsNullOrEmpty(templateUpsetFile))
+                {
+                    Debug.LogWarning("No template Upset specified, dependencies and configuration will not follow through");
+                }
+                else
+                {
+                    using (System.IO.FileStream fs = new System.IO.FileStream(templateUpsetFile, System.IO.FileMode.Open))
+                    {
+                        Uplift.Schemas.Upset template = serializer.Deserialize(fs) as Uplift.Schemas.Upset;
+                        packageExportData.dependencyList = template.Dependencies;
+                        packageExportData.specPathList = template.Configuration;
+                    }
+                }
+            }
+
+            EditorGUILayout.LabelField("File name", GUILayout.Width(60f));
+            templateUpsetFile = AssetDatabase.GetAssetPath(
+                EditorGUILayout.ObjectField(
+                    AssetDatabase.LoadMainAssetAtPath(templateUpsetFile),
+                    typeof(UnityEngine.Object),
+                    false
+                    )
+                );
+
+            EditorGUILayout.EndHorizontal();
+            EditorUtility.SetDirty(packageExportData);
+    #endregion ImportFromUpset
+    #region DependencyList
             EditorGUILayout.Separator();
             EditorGUILayout.LabelField("Dependency Settings", EditorStyles.boldLabel);
-            showDependencyList = EditorGUILayout.Foldout(showDependencyList, "Dependency List");
+            showDependencyList = EditorGUILayout.Foldout(showDependencyList, "Dependency list");
 
             if(showDependencyList)
             {
@@ -71,10 +111,11 @@ namespace Uplift.Export
             }
 
             EditorUtility.SetDirty(packageExportData);
-
+    #endregion DependencyList
+    #region SpecPathList
             EditorGUILayout.Separator();
             EditorGUILayout.LabelField("SpecPath Settings", EditorStyles.boldLabel);
-            showSpecPathList = EditorGUILayout.Foldout(showSpecPathList, "SpecPath List");
+            showSpecPathList = EditorGUILayout.Foldout(showSpecPathList, "SpecPath list");
 
             if (showSpecPathList)
             {
@@ -121,6 +162,7 @@ namespace Uplift.Export
             }
 
             EditorUtility.SetDirty(packageExportData);
+    #endregion SpecPathList
 #endregion UpsetTemplateReplacement
 
             EditorGUILayout.Separator();
