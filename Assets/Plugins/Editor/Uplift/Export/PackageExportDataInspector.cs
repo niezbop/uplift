@@ -11,6 +11,8 @@ namespace Uplift.Export
     {
         private PackageExportData packageExportData;
         private bool showPathspathsToExport = true;
+        private bool showDependencyList = true;
+        private bool showSpecPathList = true;
 
         public void OnEnable()
         {
@@ -25,18 +27,101 @@ namespace Uplift.Export
             packageExportData.packageName  = EditorGUILayout.TextField("Package name", packageExportData.packageName);
             packageExportData.packageVersion  = EditorGUILayout.TextField("Package version", packageExportData.packageVersion);
             packageExportData.license  = EditorGUILayout.TextField("License", packageExportData.license);
-            
+
+#region UpsetTemplateReplacement
             EditorGUILayout.Separator();
-            EditorGUILayout.LabelField("Additional Package Information", EditorStyles.boldLabel);
-            EditorGUILayout.HelpBox("The template upset file is used to get the dependencies and the configuration of the package", MessageType.Info);
-            packageExportData.templateUpsetFile = AssetDatabase.GetAssetPath(
-                EditorGUILayout.ObjectField(
-                    "Template Upset file",
-                    AssetDatabase.LoadMainAssetAtPath(packageExportData.templateUpsetFile),
-                    typeof(UnityEngine.Object),
-                    false
-                )
-            );
+            EditorGUILayout.LabelField("Dependency Settings", EditorStyles.boldLabel);
+            showDependencyList = EditorGUILayout.Foldout(showDependencyList, "Dependency List");
+
+            if(showDependencyList)
+            {
+                EditorGUI.indentLevel += 1;
+
+                for(int i = 0; i < packageExportData.dependencyList.Length; i++)
+                {
+                    EditorGUILayout.BeginHorizontal();
+                    Schemas.DependencyDefinition dependency = packageExportData.dependencyList[i];
+
+                    EditorGUILayout.LabelField("Name", GUILayout.Width(55f));
+                    dependency.Name = EditorGUILayout.TextField(dependency.Name);
+                    EditorGUILayout.LabelField("Version", GUILayout.Width(65f));
+                    dependency.Version = EditorGUILayout.TextField(dependency.Version);
+
+                    packageExportData.dependencyList[i] = dependency;
+
+                    if(GUILayout.Button("X", GUILayout.Width(20.0f)))
+                    {
+                        var tempDependencyList = new List<Schemas.DependencyDefinition>(packageExportData.dependencyList);
+                        tempDependencyList.RemoveAt(i);
+                        packageExportData.dependencyList = tempDependencyList.ToArray();
+                        EditorUtility.SetDirty(packageExportData);
+                    }
+
+                    EditorGUILayout.EndHorizontal();
+                }
+
+                EditorGUI.indentLevel -= 1;
+
+                if(GUILayout.Button("+"))
+                {
+                    Array.Resize<Schemas.DependencyDefinition>(ref packageExportData.dependencyList, packageExportData.dependencyList.Length + 1);
+                    packageExportData.dependencyList[packageExportData.dependencyList.Length - 1] = new Schemas.DependencyDefinition();
+                    EditorUtility.SetDirty(packageExportData);
+                }
+            }
+
+            EditorUtility.SetDirty(packageExportData);
+
+            EditorGUILayout.Separator();
+            EditorGUILayout.LabelField("SpecPath Settings", EditorStyles.boldLabel);
+            showSpecPathList = EditorGUILayout.Foldout(showSpecPathList, "SpecPath List");
+
+            if (showSpecPathList)
+            {
+                EditorGUI.indentLevel += 1;
+
+                for (int i = 0; i < packageExportData.specPathList.Length; i++)
+                {
+                    EditorGUILayout.BeginHorizontal();
+                    Schemas.InstallSpecPath spec = packageExportData.specPathList[i];
+
+                    EditorGUILayout.LabelField("Type", GUILayout.Width(55f));
+                    spec.Type = (Schemas.InstallSpecType)EditorGUILayout.EnumPopup(spec.Type);
+                    EditorGUILayout.LabelField("Path", GUILayout.Width(55f));
+
+                    spec.Path = AssetDatabase.GetAssetPath(
+                        EditorGUILayout.ObjectField(
+                            AssetDatabase.LoadMainAssetAtPath(spec.Path),
+                            typeof(UnityEngine.Object),
+                            false
+                        )
+                    );
+
+                    packageExportData.specPathList[i] = spec;
+
+                    if (GUILayout.Button("X", GUILayout.Width(20.0f)))
+                    {
+                        var tempspecPathList = new List<Schemas.InstallSpecPath>(packageExportData.specPathList);
+                        tempspecPathList.RemoveAt(i);
+                        packageExportData.specPathList = tempspecPathList.ToArray();
+                        EditorUtility.SetDirty(packageExportData);
+                    }
+
+                    EditorGUILayout.EndHorizontal();
+                }
+
+                EditorGUI.indentLevel -= 1;
+
+                if (GUILayout.Button("+"))
+                {
+                    Array.Resize<Schemas.InstallSpecPath>(ref packageExportData.specPathList, packageExportData.specPathList.Length + 1);
+                    packageExportData.specPathList[packageExportData.specPathList.Length - 1] = new Schemas.InstallSpecPath();
+                    EditorUtility.SetDirty(packageExportData);
+                }
+            }
+
+            EditorUtility.SetDirty(packageExportData);
+#endregion UpsetTemplateReplacement
 
             EditorGUILayout.Separator();
             EditorGUILayout.LabelField("Export Settings", EditorStyles.boldLabel);

@@ -98,27 +98,13 @@ namespace Uplift.Export
         {
             XmlSerializer serializer = new XmlSerializer(typeof(Upset));
 
-            Upset template;
-            if(string.IsNullOrEmpty(exportSpec.templateUpsetFile))
-            {
-                Debug.LogWarning("No template Upset specified, dependencies and configuration will not follow through");
-                template = new Upset();
-            }
-            else
-            {
-                using (FileStream fs = new FileStream(exportSpec.templateUpsetFile, FileMode.Open))
-                {
-                    template = serializer.Deserialize(fs) as Upset;
-                }
-            }
-
             var upset = new Upset() {
                 UnityVersion = Application.unityVersion,
                 PackageName = exportSpec.packageName,
                 PackageLicense = exportSpec.license,
                 PackageVersion = exportSpec.packageVersion,
-                Dependencies = template.Dependencies,
-                Configuration = template.Configuration
+                Dependencies = exportSpec.dependencyList,
+                Configuration = exportSpec.specPathList
             };
 
             using (FileStream fs = new FileStream(file, FileMode.Create))
@@ -128,7 +114,6 @@ namespace Uplift.Export
                     serializer.Serialize(sw, upset);
                 }
             }
-
         }
 
         // Convenience method for packing everything according to

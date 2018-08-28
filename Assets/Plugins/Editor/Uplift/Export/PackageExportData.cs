@@ -37,8 +37,10 @@ namespace Uplift.Export
         public  string    packageVersion  =  "";
         public  string    license         =  "";
         public  string    targetDir       =  "target";
-        public string[] pathsToExport       = new string[0];
-        public string templateUpsetFile = "";
+        public string[]   pathsToExport   = new string[0];
+
+        public Schemas.DependencyDefinition[] dependencyList = new Schemas.DependencyDefinition[0];
+        public Schemas.InstallSpecPath[] specPathList = new Schemas.InstallSpecPath[0];
 
         public object Clone()
         {
