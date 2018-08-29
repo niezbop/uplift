@@ -98,13 +98,34 @@ namespace Uplift.Export
         {
             XmlSerializer serializer = new XmlSerializer(typeof(Upset));
 
+            DependencyDefinition[] dependencyList = new DependencyDefinition[exportSpec.dependencyList.Length];
+            InstallSpecPath[] specPathList = new InstallSpecPath[exportSpec.specPathList.Length];
+
+            for (int i = 0; i < dependencyList.Length; i++)
+            {
+                DependencyDefinitionEditor value = exportSpec.dependencyList[i];
+                DependencyDefinition dependency = new DependencyDefinition();
+                dependency.Name = value.name;
+                dependency.Version = value.version;
+                dependencyList[i] = dependency;
+            }
+            for (int i = 0; i < specPathList.Length; i++)
+            {
+                InstallSpecPathEditor value = exportSpec.specPathList[i];
+                InstallSpecPath path = new InstallSpecPath();
+
+                path.Type = value.type;
+                path.Path = value.path;
+                specPathList[i] = path;
+            }
+
             var upset = new Upset() {
                 UnityVersion = Application.unityVersion,
                 PackageName = exportSpec.packageName,
                 PackageLicense = exportSpec.license,
                 PackageVersion = exportSpec.packageVersion,
-                Dependencies = exportSpec.dependencyList,
-                Configuration = exportSpec.specPathList
+                Dependencies = dependencyList,
+                Configuration = specPathList
             };
 
             using (FileStream fs = new FileStream(file, FileMode.Create))

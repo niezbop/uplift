@@ -50,8 +50,27 @@ namespace Uplift.Export
                     using (System.IO.FileStream fs = new System.IO.FileStream(templateUpsetFile, System.IO.FileMode.Open))
                     {
                         Uplift.Schemas.Upset template = serializer.Deserialize(fs) as Uplift.Schemas.Upset;
-                        packageExportData.dependencyList = template.Dependencies;
-                        packageExportData.specPathList = template.Configuration;
+
+                        packageExportData.dependencyList = new DependencyDefinitionEditor[template.Dependencies.Length];
+                        packageExportData.specPathList = new InstallSpecPathEditor[template.Configuration.Length];
+
+                        for (int i = 0; i < packageExportData.dependencyList.Length; i++)
+                        {
+                            Schemas.DependencyDefinition value = template.Dependencies[i];
+                            DependencyDefinitionEditor dependency = new DependencyDefinitionEditor();
+                            dependency.name = value.Name;
+                            dependency.version = value.Version;
+                            packageExportData.dependencyList[i] = dependency;
+                        }
+                        for (int i = 0; i < packageExportData.specPathList.Length; i++)
+                        {
+                            Schemas.InstallSpecPath value = template.Configuration[i];
+                            InstallSpecPathEditor path = new InstallSpecPathEditor();
+
+                            path.type = value.Type;
+                            path.path = value.Path;
+                            packageExportData.specPathList[i] = path;
+                        }
                     }
                 }
             }
@@ -80,18 +99,18 @@ namespace Uplift.Export
                 for(int i = 0; i < packageExportData.dependencyList.Length; i++)
                 {
                     EditorGUILayout.BeginHorizontal();
-                    Schemas.DependencyDefinition dependency = packageExportData.dependencyList[i];
+                    DependencyDefinitionEditor dependency = packageExportData.dependencyList[i];
 
                     EditorGUILayout.LabelField("Name", GUILayout.Width(55f));
-                    dependency.Name = EditorGUILayout.TextField(dependency.Name);
+                    dependency.name = EditorGUILayout.TextField(dependency.name);
                     EditorGUILayout.LabelField("Version", GUILayout.Width(65f));
-                    dependency.Version = EditorGUILayout.TextField(dependency.Version);
+                    dependency.version = EditorGUILayout.TextField(dependency.version);
 
                     packageExportData.dependencyList[i] = dependency;
 
                     if(GUILayout.Button("X", GUILayout.Width(20.0f)))
                     {
-                        var tempDependencyList = new List<Schemas.DependencyDefinition>(packageExportData.dependencyList);
+                        var tempDependencyList = new List<DependencyDefinitionEditor>(packageExportData.dependencyList);
                         tempDependencyList.RemoveAt(i);
                         packageExportData.dependencyList = tempDependencyList.ToArray();
                         EditorUtility.SetDirty(packageExportData);
@@ -104,8 +123,8 @@ namespace Uplift.Export
 
                 if(GUILayout.Button("+"))
                 {
-                    Array.Resize<Schemas.DependencyDefinition>(ref packageExportData.dependencyList, packageExportData.dependencyList.Length + 1);
-                    packageExportData.dependencyList[packageExportData.dependencyList.Length - 1] = new Schemas.DependencyDefinition();
+                    Array.Resize<DependencyDefinitionEditor> (ref packageExportData.dependencyList, packageExportData.dependencyList.Length + 1);
+                    packageExportData.dependencyList[packageExportData.dependencyList.Length - 1] = new DependencyDefinitionEditor();
                     EditorUtility.SetDirty(packageExportData);
                 }
             }
@@ -124,15 +143,15 @@ namespace Uplift.Export
                 for (int i = 0; i < packageExportData.specPathList.Length; i++)
                 {
                     EditorGUILayout.BeginHorizontal();
-                    Schemas.InstallSpecPath spec = packageExportData.specPathList[i];
+                    InstallSpecPathEditor spec = packageExportData.specPathList[i];
 
                     EditorGUILayout.LabelField("Type", GUILayout.Width(55f));
-                    spec.Type = (Schemas.InstallSpecType)EditorGUILayout.EnumPopup(spec.Type);
+                    spec.type = (Schemas.InstallSpecType)EditorGUILayout.EnumPopup(spec.type);
                     EditorGUILayout.LabelField("Path", GUILayout.Width(55f));
 
-                    spec.Path = AssetDatabase.GetAssetPath(
+                    spec.path = AssetDatabase.GetAssetPath(
                         EditorGUILayout.ObjectField(
-                            AssetDatabase.LoadMainAssetAtPath(spec.Path),
+                            AssetDatabase.LoadMainAssetAtPath(spec.path),
                             typeof(UnityEngine.Object),
                             false
                         )
@@ -142,7 +161,7 @@ namespace Uplift.Export
 
                     if (GUILayout.Button("X", GUILayout.Width(20.0f)))
                     {
-                        var tempspecPathList = new List<Schemas.InstallSpecPath>(packageExportData.specPathList);
+                        var tempspecPathList = new List<InstallSpecPathEditor>(packageExportData.specPathList);
                         tempspecPathList.RemoveAt(i);
                         packageExportData.specPathList = tempspecPathList.ToArray();
                         EditorUtility.SetDirty(packageExportData);
@@ -155,8 +174,8 @@ namespace Uplift.Export
 
                 if (GUILayout.Button("+"))
                 {
-                    Array.Resize<Schemas.InstallSpecPath>(ref packageExportData.specPathList, packageExportData.specPathList.Length + 1);
-                    packageExportData.specPathList[packageExportData.specPathList.Length - 1] = new Schemas.InstallSpecPath();
+                    Array.Resize<InstallSpecPathEditor>(ref packageExportData.specPathList, packageExportData.specPathList.Length + 1);
+                    packageExportData.specPathList[packageExportData.specPathList.Length - 1] = new InstallSpecPathEditor();
                     EditorUtility.SetDirty(packageExportData);
                 }
             }

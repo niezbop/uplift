@@ -28,6 +28,19 @@ using System;
 
 namespace Uplift.Export
 {
+    [System.Serializable]
+    public struct DependencyDefinitionEditor
+    {
+        public string name;
+        public string version;
+    }
+
+    [System.Serializable]
+    public struct InstallSpecPathEditor
+    {
+        public Schemas.InstallSpecType type;
+        public string path;
+    }
 #if UNITY_5_1_OR_NEWER
     [CreateAssetMenuAttribute(fileName = "PackageExport.asset", menuName = "Uplift/Package Export Definition", order = 250)]
 #endif
@@ -39,8 +52,8 @@ namespace Uplift.Export
         public  string    targetDir       =  "target";
         public string[]   pathsToExport   = new string[0];
 
-        public Schemas.DependencyDefinition[] dependencyList = new Schemas.DependencyDefinition[0];
-        public Schemas.InstallSpecPath[] specPathList = new Schemas.InstallSpecPath[0];
+        public DependencyDefinitionEditor[] dependencyList = new DependencyDefinitionEditor[0];
+        public InstallSpecPathEditor[] specPathList = new InstallSpecPathEditor[0];
 
         public object Clone()
         {
